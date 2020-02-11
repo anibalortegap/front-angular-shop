@@ -1,12 +1,19 @@
 <div class="container">
     <h2>User Setting</h2>
-    <form>
+    <form #form='ngForm' (ngSubmit)='onSubmit(form)'>
         <div class="form-group">
             <label for="name">Name</label>
-            <input id="name" name="name" class="form-control" type="text" [ngModel]="lado">
+            <input id="name" name="name" class="form-control" type="text" [(ngModel)]='userSetting.name'
+            required #nameField="ngModel"
+            (blur)='onBlur(nameField)'
+            [class.field-error]='form.submitted && nameField.invalid'>
+            <div [hidden]="!form.submitted || nameField.valid"
+            class="alert alert-danger">
+            Enter a name
+        </div>
         </div>
         <div class="form-check form-group">
-            <input class="form-check-input" type="checkbox" value="" id="emailOffers" name="emailOffers">
+            <input class="form-check-input" type="checkbox" value="" id="emailOffers" name="emailOffers" [(ngModel)]='userSetting.emailOffers'>
             <label class="form-check-label" for="emailOffers">
                 Email Special Offers
             </label>
@@ -15,19 +22,19 @@
         <div class="form-group">
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="interfaceStyle" id="lightInterface" value="Light"
-                    checked>
+                    checked [(ngModel)]='userSetting.interfaceStyle'>
                 <label class="form-check-label" for="lightInterface">
                     Light
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="interfaceStyle" id="mediumInterface" value="Medium">
+                <input class="form-check-input" type="radio" name="interfaceStyle" id="mediumInterface" value="Medium" ngModel>
                 <label class="form-check-label" for="mediumInterface">
                     Medium
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="interfaceStyle" id="darkInterface" value="Dark">
+                <input class="form-check-input" type="radio" name="interfaceStyle" id="darkInterface" value="Dark" ngModel>
                 <label class="form-check-label" for="darkInterface">
                     Dark
                 </label>
@@ -35,33 +42,41 @@
         </div>
         <div class="form-group">
             <label for="subscriptionType">Subscripcion Type</label>
-            <select class="form-control" id="subscriptionType">
-                <option>Monthly</option>
-                <option>Annual</option>
-                <option>Lifetime</option>
+            <select class="form-control" id="subscriptionType" name="subscriptionType" [(ngModel)]='userSetting.subscriptionType'>
+                <option *ngFor="let type of subscriptionTypes | async">
+                    {{type}}
+                </option>
             </select>
         </div>
         <div class="form-group">
             <label for="notes">Notes</label>
             <textarea id="notes" name="notes" class="form-control"
-                        rows="3">
+                        rows="3" [(ngModel)]='userSetting.notes'>
             </textarea>
         </div>
         <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" name="password"
-                    class="form-control" />
+                    class="form-control" [(ngModel)]='userSetting.password' />
         </div>
         <div class="form-group">
             <label for="date">Fecha</label>
             <input type="date" name="date" id="date"
-                    class="form-control"/>
+                    class="form-control" [(ngModel)]='userSetting.date'/>
         </div>
         <div class="form-group">
             <label for="color">Color</label>
             <input type="color" id="color" name="color"
-                    class="form-control">
+                    class="form-control" [(ngModel)]='userSetting.color'>
+        </div>
+        <div [hidden]='!postError'
+            class="alert alert-danger">
+            {{ postErrorMessage }}
         </div>
         <button class="btn btn-primary">Send</button>
     </form>
 </div>
+
+<h2>{{  form.value  | json  }}</h2>
+
+
